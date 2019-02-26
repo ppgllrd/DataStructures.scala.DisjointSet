@@ -1,10 +1,7 @@
 /** ****************************************************************************
-  * Disjoint Sets
+  * Disjoint Sets, aka Union-Find data structure
   *
   * Pepe Gallardo, 2019
-  *
-  * See:
-  *   Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne
   *
   * ****************************************************************************/
 
@@ -13,76 +10,34 @@ package disjointSet
 import indexedSet.IndexedSet
 
 trait DisjointSet[A] {
-  // size is total number of elements in all sets
-  protected val size : Int
-
-  protected def indexOf(x : A) : Int
-  protected def elementOf(i : Int) : A
+  // total number of elements in all sets
+  val size: Int
 
   // number of different components
-  protected var nComponents = size
-  def numComponents: Int = nComponents
+  def numComponents: Int
 
-  protected val roots = Array.tabulate[Int](size)(i => i)
-  protected val sizes = Array.fill[Int](size)(1)
+  def union(x: A, y: A): Unit
 
-  protected def validate(i : Int): Unit =
+  def areConnected(x: A, y: A): Boolean
+
+  // one-to-one correspondence between elements and natural numbers
+  protected def indexOf(x: A): Int
+  protected def elementOf(i: Int): A
+
+  protected final def validate(i: Int): Unit =
     assert(0 <= i && i < size, s"DisjointSet. element ${elementOf(i)} is not a valid one")
-
-  protected def findIndexRoot(i : Int) : Int = {
-    validate(i)
-    var root = i
-    var stop = false
-    while(!stop) {
-      val parent = roots(root)
-      if(root == parent)
-        stop = true
-      else
-        root = parent
-    }
-
-    // path compression
-    var p = i
-    while (p != root) {
-      val pRoot = roots(p)
-      roots(p) = root
-      p = pRoot
-    }
-
-    root
-  }
-
-  protected def findRoot(x : A) : Int =
-    findIndexRoot(indexOf(x))
-
-  def areConnected(x: A, y: A): Boolean =
-    findRoot(x) == findRoot(y)
-
-  def union(x: A, y: A): Unit = {
-    val xRoot = findRoot(x)
-    val yRoot = findRoot(y)
-
-    if (xRoot != yRoot) {
-      if (sizes(xRoot) < sizes(yRoot)) {
-        roots(xRoot) = yRoot
-        sizes(xRoot) += sizes(yRoot)
-      } else {
-        roots(yRoot) = xRoot
-        sizes(yRoot) += sizes(xRoot)
-      }
-      nComponents -= 1
-    }
-  }
 }
 
 
 object DisjointSet {
-  def fromIndexedSet[A](indexedSet : IndexedSet[A]) : DisjointSet[A] =
-    new DisjointSet[A] {
-      override protected val size: Int = indexedSet.size
+  // default implementation uses interleaved implementation
+  def fromIndexedSet[A](indexedSet: IndexedSet[A]): InterleavedDisjointSet[A] =
+    InterleavedDisjointSet.fromIndexedSet(indexedSet)
+}
 
-      override protected def indexOf(x: A): Int = indexedSet.indexOf(x)
 
-      override protected def elementOf(i: Int): A = indexedSet.elementOf(i)
-    }
+object DisjointIntSet {
+  // default implementation uses interleaved implementation
+  def apply(size: Int): InterleavedDisjointIntSet =
+    InterleavedDisjointIntSet(size)
 }
