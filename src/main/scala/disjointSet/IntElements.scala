@@ -1,6 +1,6 @@
 package disjointSet
 
-private trait IntElements {
+protected trait IntElements {
   this: DisjointSet[Int] =>
 
   override protected final def indexOf(x: Int): Int = x
