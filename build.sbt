@@ -1,6 +1,8 @@
-name := "DisjointSet"
+ThisBuild / version := "0.1.0-SNAPSHOT"
 
-version := "0.1"
+ThisBuild / scalaVersion := "2.13.10"
 
-scalaVersion := "2.12.8"
-
+lazy val root = (project in file("."))
+  .settings(
+    name := "DataStructures.scala.DisjointSet"
+  )
