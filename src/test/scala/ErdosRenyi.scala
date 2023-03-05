@@ -1,4 +1,4 @@
-import disjointSet.{DisjointSet, InterleavedDisjointIntSet, WeightedPathCompressedDisjointIntSet}
+import disjointSet.{DisjointSet, InterleavedDisjointIntSet, RankedPathCompressedDisjointIntSet, WeightedPathCompressedDisjointIntSet}
 
 object ErdosRenyi extends App {
   def runtimeTest[DSI](makeDisjointSet: Int => DSI)
@@ -8,7 +8,7 @@ object ErdosRenyi extends App {
 
       var edges = 0
       val disjointSet = makeDisjointSet(size)
-      while (disjointSet.numComponents > 1) {
+      while (disjointSet.numberOfComponents > 1) {
         val n = rnd.nextInt(size)
         val m = rnd.nextInt(size)
         disjointSet.union(n, m)
@@ -36,6 +36,9 @@ object ErdosRenyi extends App {
 
   val tInter = runtimeTest(InterleavedDisjointIntSet(_))
   val tWPC = runtimeTest(WeightedPathCompressedDisjointIntSet(_))
+  val tRPC = runtimeTest[RankedPathCompressedDisjointIntSet](RankedPathCompressedDisjointIntSet(_))
 
-  print(f"Interleaved is ${100*(1-tInter/tWPC)}%.2f%% faster")
+  println(f"Interleaved is ${100 * (1 - tInter / tWPC)}%.2f%% faster than weighted")
+  println(f"Interleaved is ${100 * (1 - tInter / tRPC)}%.2f%% faster than ranked")
+  println(f"Ranked is ${100 * (1 - tRPC / tWPC)}%.2f%% faster than weighted")
 }
