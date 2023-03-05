@@ -7,21 +7,38 @@
 
 package disjointSet
 
+
 object InterleavedDisjointIntSet {
-  def apply(size : Int) : InterleavedDisjointIntSet =
+  /** Constructs a disjoint set of integers using Rem's implementation in:
+   * Experiments on Union-Find Algorithms for the Disjoint-Set Data Structure.
+   * Md. Mostofa Ali Patwary1, Jean Blair2, and Fredrik Manne
+   *
+   * @param size number of integers in new disjoint set.
+   * @return a new disjoint set of integers with specified number of elements.
+   */
+  def apply(size: Int): InterleavedDisjointIntSet =
     new InterleavedDisjointIntSet(size)
 }
 
 
+/**
+ * Implementation of disjoint sets as described for Rem's implementation in:
+ * Experiments on Union-Find Algorithms for the Disjoint-Set Data Structure.
+ * Md. Mostofa Ali Patwary1, Jean Blair2, and Fredrik Manne
+ * Specialized implementation for integer elements.
+ *
+ * @param size number of elements in disjoint set.
+ * @author Pepe Gallardo.
+ */
 class InterleavedDisjointIntSet(override val size: Int)
   extends InterleavedDisjointSet[Int]
     with IntElements {
 
   override final def areConnected(i: Int, j: Int): Boolean =
-    indexUnite(i, j, false)
+    indexAreConnected(i, j)
 
-  override final def union(i: Int, j: Int): Unit =
-    indexUnite(i, j, true)
+  override final def union(i: Int, j: Int): Boolean =
+    indexUnion(i, j)
 }
 
 

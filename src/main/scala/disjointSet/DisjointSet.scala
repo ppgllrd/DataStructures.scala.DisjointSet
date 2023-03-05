@@ -10,14 +10,31 @@ package disjointSet
 import indexedSet.IndexedSet
 
 trait DisjointSet[A] {
-  // total number of elements in all sets
+  /**
+   * total number of elements in all disjoint components.
+   */
   val size: Int
 
-  // number of different components
-  def numComponents: Int
+  /**
+   * Returns number of disjoint components in disjoint set. 
+   * @return number of disjoint components in disjoint set.
+   */
+  def numberOfComponents: Int
 
-  def union(x: A, y: A): Unit
+  /**
+   * Unites two disjoint components in disjoint set.
+   * @param x one element in first component.
+   * @param y one element in second component.
+   * @return `true` if elements were previously in different disjoint components.
+   */
+  def union(x: A, y: A): Boolean
 
+  /**
+   * Checks whether two elements are in same disjoint component.
+   * @param x one element.
+   * @param y another element.
+   * @return `true` if both elements are in same disjoint set.
+   */
   def areConnected(x: A, y: A): Boolean
 
   // one-to-one correspondence between elements and natural numbers
@@ -31,13 +48,13 @@ trait DisjointSet[A] {
 
 object DisjointSet {
   // default implementation uses interleaved implementation
-  def fromIndexedSet[A](indexedSet: IndexedSet[A]): InterleavedDisjointSet[A] =
+  def fromIndexedSet[A](indexedSet: IndexedSet[A]): DisjointSet[A] =
     InterleavedDisjointSet.fromIndexedSet(indexedSet)
 }
 
 
 object DisjointIntSet {
   // default implementation uses interleaved implementation
-  def apply(size: Int): InterleavedDisjointIntSet =
+  def apply(size: Int): DisjointSet[Int] =
     InterleavedDisjointIntSet(size)
 }
